@@ -1,0 +1,32 @@
+{
+  "name": "collab-iot-device",
+  "version": "0.0.1",
+  "description": "This is one of 4 repositories used to try oauth2 and passport",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "npx eslint src",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cotarr/collab-iot-device.git"
+  },
+  "author": "Dave Bolenbaugh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cotarr/collab-iot-device/issues"
+  },
+  "homepage": "https://github.com/cotarr/collab-iot-device#readme",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "node-fetch": "^2.6.2"
+  }
+}
