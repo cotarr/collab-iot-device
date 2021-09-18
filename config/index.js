@@ -8,6 +8,7 @@ require('dotenv').config();
 
 exports.app = {
   pidFilename: process.env.APP_PID_FILENAME || '',
+  collectIntervalSeconds: process.env.APP_COLLECT_INTERVAL_SECONDS || 60,
   disableDataCollectTimer: (process.env.APP_DISABLE_DATA_COLLECT_TIMER === 'true') || false
 };
 
@@ -15,8 +16,7 @@ exports.oauth2 = {
   clientId: process.env.OAUTH2_CLIENT_ID || 'abc123',
   clientSecret: process.env.OAUTH2_CLIENT_SECRET || 'ssh-secret',
   requestScope: process.env.OAUTH2_REQUEST_SCOPE || 'api.write',
-  authURL: process.env.OAUTH2_AUTH_URL || 'http://127.0.0.1:3500',
-  tokenCacheSec: process.env.OAUTH2_TOKEN_CACHE_SEC || 60
+  authURL: process.env.OAUTH2_AUTH_URL || 'http://127.0.0.1:3500'
 };
 
 exports.remote = {

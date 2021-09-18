@@ -10,8 +10,8 @@ const config = require('../config');
  *
  * previousResult = {
  *   data: {
- *   deviceId: 'iot-device-12',
- *   timestamp: '2021-09-17T15:33:07.743Z',
+ *     deviceId: 'iot-device-12',
+ *     timestamp: '2021-09-17T15:33:07.743Z',
  *     data1: 25.486,
  *     data2: 25.946,
  *     data3: 24.609

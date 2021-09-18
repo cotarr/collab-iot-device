@@ -5,6 +5,8 @@ const fetch = require('node-fetch');
 const config = require('../config');
 // const nodeEnv = process.env.NODE_ENV || 'development';
 
+let cachedToken = null;
+
 /**
  * Convert data object to `thenable` result object
  * than can be used in chained promises.
@@ -63,9 +65,24 @@ exports.getCachedToken = (previousResult) => {
     const nextResult = {};
     nextResult.data = previousResult.data || undefined;
     nextResult.error = previousResult.error || false;
-    // find in cache
     nextResult.token = undefined;
-    return Promise.resolve(nextResult);
+
+    // If cached token is expired, clear it (10 second margin)
+    const nowSeconds = Math.floor((new Date().getTime()) / 1000);
+    if ((cachedToken == null) ||
+      (cachedToken.accessToken == null) ||
+      (cachedToken.expires == null) ||
+      (cachedToken.expires < nowSeconds + 10)) {
+      // Case of expired token, clear expired token
+      cachedToken = undefined;
+      nextResult.token = undefined;
+      // return Promise
+      return Promise.resolve(nextResult);
+    } else {
+      nextResult.token = cachedToken;
+      // return Promise
+      return Promise.resolve(nextResult);
+    }
   }
 };
 
@@ -74,11 +91,7 @@ exports.getCachedToken = (previousResult) => {
  *
  * previousResult = {
  *   data: { ... },
- *   token: {
- *     accessToken: 'xxxxxxxxxxxxxxxxxxx',
- *     expires: 1631808644,
- *     cached: true
- *   },
+ *   token: undefined,   (or, valid token if exist)
  *   error: false
  * }
 
@@ -103,10 +116,17 @@ exports.fetchNewTokenIfNeeded = (previousResult) => {
     nextResult.data = previousResult.data || undefined;
     nextResult.token = previousResult.token || undefined;
     nextResult.error = previousResult.error || false;
-    if ((nextResult.token) && (nextResult.token.accessToken)) {
+
+    if ((nextResult.token) && (nextResult.token.accessToken) &&
+      (nextResult.token.accessToken.length > 0)) {
+      // case of token already exist, skip fetch
       return Promise.resolve(nextResult);
     } else {
+      // Clear any previously cached token
+      cachedToken = undefined;
+      // OAuth2 authorization server
       const fetchUrl = config.oauth2.authURL + '/oauth/token';
+      // POST request
       const body = {
         client_id: config.oauth2.clientId,
         client_secret: config.oauth2.clientSecret,
@@ -153,7 +173,10 @@ exports.fetchNewTokenIfNeeded = (previousResult) => {
  *
  * previousResult = {
  *   data: { ... },
- *   token: { ... },
+ *     accessToken: 'xxxxxxxxxxxxxxxxxxx',
+ *     expires: 1631808644,
+ *     cached: true
+ *   },
  *   error: false
  * }
  *
@@ -173,8 +196,19 @@ exports.saveTokenIfNeeded = (previousResult) => {
     const nextResult = {};
     nextResult.data = previousResult.data || undefined;
     nextResult.token = previousResult.token || undefined;
-    if (nextResult.token) nextResult.token.cached = true;
     nextResult.error = previousResult.error || false;
-    return Promise.resolve(nextResult);
+
+    // If token not exit or marked (cached === true), then skip
+    if ((nextResult == null) || (!('token' in nextResult)) ||
+      (nextResult.token.accessToken == null) ||
+      (nextResult.token.cached === true)) {
+      // case of no token or token already cached, skip
+      return Promise.resolve(nextResult);
+    } else {
+      // Cache token by saving as module variable
+      nextResult.token.cached = true;
+      cachedToken = nextResult.token;
+      return Promise.resolve(nextResult);
+    }
   }
 };
