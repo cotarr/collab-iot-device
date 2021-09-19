@@ -1,12 +1,10 @@
 # collab-iot-device
 
-This is a demo repository.
-It is a mock IOT device that will emulate data collection from a physical device.
-Oauth2 access_token will be obtained from the authorization server using client credential grant type.
-Using a timer loop, mock data will be sent to the mock database API.
+This is 1 of 4 repositories used on a collaboration project for learning oauth2orize and passport.
+This repository is a mock IOT device that will emulate data collection from a physical device on a home network.
+Oauth2 access_token will be obtained from the authorization server using grant type client credentials.
+Using a timer loop, mock data will be repetitively sent to a mock database API.
 New access_tokens are obtained as needed from the authorization server.
-
-This is one of 4 repositories
 
 |                        Repository                                  |                   Description                         |
 | ------------------------------------------------------------------ | ----------------------------------------------------- |
@@ -25,7 +23,14 @@ cd collab-iot-device
 npm install
 ```
 
-### Run
+### To start the program
+
+In the development environment with NODE_ENV=development or NODE_ENV not specified,
+the application should run as-is. No configuration is necessary in development mode.
+Alternately, environment variables can be configured as listed at the end of this README,
+When the program starts, it will run continuously until stopped by pressing ctrl-C.
+The program will obtain an access_token, then using a cycle timer, submit
+mock IOT data submissions to the mock database at a repeat interval of 60 seconds.
 
 ```
 npm start

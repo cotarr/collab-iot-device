@@ -3,12 +3,11 @@
 // const path = require('path');
 
 require('dotenv').config();
-
 // const nodeEnv = process.env.NODE_ENV || 'development';
 
 exports.app = {
   pidFilename: process.env.APP_PID_FILENAME || '',
-  collectIntervalSeconds: process.env.APP_COLLECT_INTERVAL_SECONDS || 60,
+  collectIntervalSeconds: parseInt(process.env.APP_COLLECT_INTERVAL_SECONDS || '60'),
   disableDataCollectTimer: (process.env.APP_DISABLE_DATA_COLLECT_TIMER === 'true') || false
 };
 

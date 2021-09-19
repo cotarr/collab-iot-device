@@ -1,7 +1,7 @@
 {
   "name": "collab-iot-device",
   "version": "0.0.1",
-  "description": "This is one of 4 repositories used to try oauth2 and passport",
+  "description": "Mock IOT device used on a collaboration project for learning oauth2orize and passport",
   "main": "src/index.js",
   "scripts": {
     "lint": "npx eslint src",
