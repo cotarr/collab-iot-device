@@ -13,6 +13,11 @@ const collectDataAndSave = () => {
     .then((resultObj) => getToken.fetchNewTokenIfNeeded(resultObj))
     .then((resultObj) => getToken.saveTokenIfNeeded(resultObj))
     .then((resultObj) => pushToSql.pushDataToSqlApi(resultObj))
+    .then((resultObj) => getToken.setupOptionalReplacementToken(resultObj))
+    .then((resultObj) => getToken.fetchNewTokenIfNeeded(resultObj))
+    .then((resultObj) => getToken.saveTokenIfNeeded(resultObj))
+    // .then((resultObj) => { console.log(resultObj); return resultObj; })
+    .then((resultObj) => pushToSql.pushDataToSqlApi(resultObj))
     // .then((resultObj) => { console.log(resultObj); })
     .catch((err) => console.log(err));
 };
