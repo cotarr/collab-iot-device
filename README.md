@@ -1,6 +1,6 @@
 # collab-iot-device
 
-This is 1 of 4 repositories used on a collaboration project for learning oauth2orize and passport.
+This is 4 of 4 repositories used on a collaboration project for learning oauth2orize and passport.
 This repository is a mock IOT device that will emulate data collection from a physical device on a home network.
 Oauth2 access_token will be obtained from the authorization server using grant type client credentials.
 Using a timer loop, mock data will be repetitively sent to a mock database API.
