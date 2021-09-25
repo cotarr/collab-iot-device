@@ -14,7 +14,7 @@ exports.app = {
 exports.oauth2 = {
   clientId: process.env.OAUTH2_CLIENT_ID || 'abc123',
   clientSecret: process.env.OAUTH2_CLIENT_SECRET || 'ssh-secret',
-  requestScope: process.env.OAUTH2_REQUEST_SCOPE || 'api.write',
+  requestScope: JSON.parse(process.env.OAUTH2_REQUEST_SCOPE || '["api.write"]'),
   authURL: process.env.OAUTH2_AUTH_URL || 'http://127.0.0.1:3500'
 };
 

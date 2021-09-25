@@ -8,6 +8,28 @@ const config = require('../config');
 let cachedToken = null;
 
 /**
+ * Convert array of strings to space separated list of scopes
+ * @param   {Array} scopeArray - Array of scope strings
+ * @returns {String} Returns string with separated scopes
+ */
+const _toScopeString = (scopeInput) => {
+  if ((scopeInput == null) ||
+    ((typeof scopeInput !== 'string') &&
+    (!Array.isArray(scopeInput)))) {
+    throw new Error('scope must be string or array');
+  }
+  if (typeof scopeInput === 'string') {
+    scopeInput = [scopeInput];
+  }
+  let scopeString = '';
+  scopeInput.forEach((scope, i) => {
+    if (i > 0) scopeString += ' ';
+    scopeString += scope.toString();
+  });
+  return scopeString;
+};
+
+/**
  * Convert data object to `thenable` result object
  * than can be used in chained promises.
  *
@@ -130,7 +152,7 @@ exports.fetchNewTokenIfNeeded = (previousResult) => {
         client_id: config.oauth2.clientId,
         client_secret: config.oauth2.clientSecret,
         grant_type: 'client_credentials',
-        scope: config.oauth2.requestScope
+        scope: _toScopeString(config.oauth2.requestScope)
       };
       const fetchOptions = {
         method: 'POST',
