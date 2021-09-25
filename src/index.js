@@ -9,14 +9,18 @@ const config = require('../config');
 const collectDataAndSave = () => {
   acquire.generateMockDataObject()
     .then((data) => getToken.dataToObject(data))
+    // Get access_token
     .then((resultObj) => getToken.getCachedToken(resultObj))
     .then((resultObj) => getToken.fetchNewTokenIfNeeded(resultObj))
     .then((resultObj) => getToken.saveTokenIfNeeded(resultObj))
+    // First try
     .then((resultObj) => pushToSql.pushDataToSqlApi(resultObj))
+    // Get replacement access token if needed (or skip)
     .then((resultObj) => getToken.setupOptionalReplacementToken(resultObj))
     .then((resultObj) => getToken.fetchNewTokenIfNeeded(resultObj))
     .then((resultObj) => getToken.saveTokenIfNeeded(resultObj))
-    // .then((resultObj) => { console.log(resultObj); return resultObj; })
+    // .then((resultObj) => { console.log('resultObj ', resultObj); return resultObj; })
+    // Second try if needed (or skip)
     .then((resultObj) => pushToSql.pushDataToSqlApi(resultObj))
     // .then((resultObj) => { console.log(resultObj); })
     .catch((err) => console.log(err));
@@ -25,6 +29,8 @@ const collectDataAndSave = () => {
 if (!config.app.disableDataCollectTimer) {
   console.log('collab-iot-device started with interval ' +
     config.app.collectIntervalSeconds.toString() + ' seconds.');
+  // do first time at program start
+  setTimeout(collectDataAndSave, 1000);
   setInterval(collectDataAndSave, config.app.collectIntervalSeconds * 1000);
 } else {
   console.log('collab-iot-device timer disabled, runing one time.');

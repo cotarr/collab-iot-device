@@ -1,7 +1,5 @@
 'use strict';
 
-var showDebug = false;
-
 const fetch = require('node-fetch');
 
 const config = require('../config');
@@ -27,7 +25,6 @@ let cachedToken = null;
  * @returns {Object} nextResult chainable object (see above)
  */
 exports.dataToObject = (data) => {
-  if (showDebug) console.log('>>> dataToObject');
   const nextResult = {};
   nextResult.data = data || undefined;
   nextResult.token = undefined;
@@ -61,9 +58,7 @@ exports.dataToObject = (data) => {
  * @returns {Object} nextResult (see above)
  */
 exports.getCachedToken = (previousResult) => {
-  if (showDebug) console.log('>>> getCachedToken');
   if (previousResult.error) {
-    if (showDebug) console.log('skipping due to error');
     return Promise.resolve(previousResult);
   } else {
     const nextResult = {};
@@ -77,14 +72,12 @@ exports.getCachedToken = (previousResult) => {
       (cachedToken.accessToken == null) ||
       (cachedToken.expires == null) ||
       (cachedToken.expires < nowSeconds + 10)) {
-      if (showDebug) console.log('expired token detected, setting flags');
       // Case of expired token, clear expired token
       cachedToken = undefined;
       nextResult.token = undefined;
       // return Promise
       return Promise.resolve(nextResult);
     } else {
-      if (showDebug) console.log('returning cached token');
       nextResult.token = cachedToken;
       // return Promise
       return Promise.resolve(nextResult);
@@ -115,9 +108,7 @@ exports.getCachedToken = (previousResult) => {
  * @returns {Object} nextResult (see above)
  */
 exports.fetchNewTokenIfNeeded = (previousResult) => {
-  if (showDebug) console.log('>>> fetchNewTokenIfNeeded');
   if (previousResult.error) {
-    if (showDebug) console.log('skipping new token due to error');
     return Promise.resolve(previousResult);
   } else {
     const nextResult = {};
@@ -128,7 +119,6 @@ exports.fetchNewTokenIfNeeded = (previousResult) => {
     if ((nextResult.token) && (nextResult.token.accessToken) &&
       (nextResult.token.accessToken.length > 0)) {
       // case of token already exist, skip fetch
-      if (showDebug) console.log('token exist, skipping fetch');
       return Promise.resolve(nextResult);
     } else {
       // Clear any previously cached token
@@ -163,7 +153,6 @@ exports.fetchNewTokenIfNeeded = (previousResult) => {
           }
         })
         .then((tokenResponse) => {
-          if (showDebug) console.log('have new token');
           // console.log(tokenResponse);
           const nowSeconds = Math.floor((new Date().getTime()) / 1000);
           const token = {
@@ -200,9 +189,7 @@ exports.fetchNewTokenIfNeeded = (previousResult) => {
  * @returns {Object} nextResult (see above)
  */
 exports.saveTokenIfNeeded = (previousResult) => {
-  if (showDebug) console.log('>>> saveTokenIfNeeded');
   if (previousResult.error) {
-    if (showDebug) console.log('skipping due to error');
     return Promise.resolve(previousResult);
   } else {
     const nextResult = {};
@@ -215,11 +202,9 @@ exports.saveTokenIfNeeded = (previousResult) => {
       (nextResult.token.accessToken == null) ||
       (nextResult.token.cached === true)) {
       // case of no token or token already cached, skip
-      if (showDebug) console.log('skipping, already cached (cached=true)');
       return Promise.resolve(nextResult);
     } else {
       // Cache token by saving as module variable
-      if (showDebug) console.log('saving token to cache');
       nextResult.token.cached = true;
       cachedToken = nextResult.token;
       return Promise.resolve(nextResult);
@@ -228,9 +213,7 @@ exports.saveTokenIfNeeded = (previousResult) => {
 };
 
 exports.setupOptionalReplacementToken = (previousResult) => {
-  if (showDebug) console.log('>>> setupOptionalReplacementToken');
   if ((previousResult.error) && (previousResult.error !== 'UNAUTHORIZED')) {
-    if (showDebug) console.log('skipping due to error');
     return Promise.resolve(previousResult);
   } else {
     const nextResult = {};
@@ -238,13 +221,11 @@ exports.setupOptionalReplacementToken = (previousResult) => {
     nextResult.token = previousResult.token || undefined;
     nextResult.error = previousResult.error || false;
     if ((nextResult.error) && (nextResult.error === 'UNAUTHORIZED')) {
-      if (showDebug) console.log('setup flags for retry');
       // configure flags to retry new token and retry data post
       nextResult.token = undefined;
       nextResult.error = false;
       return Promise.resolve(nextResult);
     } else {
-      if (showDebug) console.log('normal return to chain.');
       return Promise.resolve(nextResult);
     }
   }
