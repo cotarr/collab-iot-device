@@ -8,7 +8,7 @@ New access_tokens are obtained as needed from the authorization server.
 
 |                        Repository                                  |                   Description                         |
 | ------------------------------------------------------------------ | ----------------------------------------------------- |
-| collab-auth                                                        | Oauth2 Authorization Provider, redirect login, tokens |
+|  [collab-auth](https://github.com/cotarr/collab-auth)              | Oauth2 Authorization Provider, redirect login, tokens |
 | [collab-frontend](https://github.com/cotarr/collab-frontend)       | Mock Web server, reverse proxy, HTML content          |
 | [collab-backend-api](https://github.com/cotarr/collab-backend-api) | Mock REST API using tokens to authorize requests      |
 | [collab-iot-device](https://github.com/cotarr/collab-iot-device)   | Mock IOT Device with data acquisition saved to DB     |
@@ -41,9 +41,9 @@ npm start
 The `.env` file is supported using dotenv npm package
 
 ```
-APP_PID_FILENAME=/home/user/tmp/collab-iot-device.PID
+APP_PID_FILENAME=
 APP_COLLECT_INTERVAL_SECONDS=60
-APP_APP_DISABLE_DATA_COLLECT_TIMER=true
+APP_APP_DISABLE_DATA_COLLECT_TIMER=false
 
 OAUTH2_CLIENT_ID=abc123
 OAUTH2_CLIENT_SECRET=ssh-secret
@@ -76,7 +76,7 @@ IOT devices are automated machine devices that operate continuously.
 The use of a user login and password is impractical for security
 reasons, because each of multiple devices would need to store the user's password.
 OAuth2 allows IOT devices operate under their own authority without a user.
-Oauth2 supports a token grant type called "Client Credentials&quot grant.
+Oauth2 supports a token grant type called "Client Credentials" grant.
 This type of token is sometimes called a machine token, as opposed to a user token.
 Before an IOT device can use this method, a client record must be created
 in the oauth2 authorization server. The client_id and client_secret are then
