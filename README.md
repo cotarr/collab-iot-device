@@ -9,7 +9,7 @@ New access_tokens are obtained as needed from the authorization server.
 
 |                        Repository                                  |                   Description                         |
 | ------------------------------------------------------------------ | ----------------------------------------------------- |
-| [collab-auth](https://github.com/cotarr/collab-auth)          -     | Oauth2 Authorization Provider, redirect login, tokens |
+| [collab-auth](https://github.com/cotarr/collab-auth)               | Oauth2 Authorization Provider, redirect login, tokens |
 | [collab-frontend](https://github.com/cotarr/collab-frontend)       | Mock Web server, reverse proxy, HTML content          |
 | [collab-backend-api](https://github.com/cotarr/collab-backend-api) | Mock REST API using tokens to authorize requests      |
 | [collab-iot-device](https://github.com/cotarr/collab-iot-device)   | Mock IOT Device with data acquisition saved to DB     |
