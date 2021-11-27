@@ -4,7 +4,8 @@
 const fetch = require('node-fetch');
 
 const config = require('../config');
-// const nodeEnv = process.env.NODE_ENV || 'development';
+const nodeEnv = process.env.NODE_ENV || 'development';
+const nodeDebugLog = process.env.NODE_DEBUG_LOG || 0;
 
 /**
  *
@@ -72,6 +73,7 @@ exports.pushDataToSqlApi = (previousResult) => {
           }
         })
         .then((createdRecord) => {
+          // console.log(createdRecord);
           // This is special case error trap of 401 Unauthorized error for possible retry
           if ((!(createdRecord == null)) && ('error' in createdRecord) &&
             (createdRecord.error === 'UNAUTHORIZED')) {
@@ -79,6 +81,14 @@ exports.pushDataToSqlApi = (previousResult) => {
             nextResult.error = 'UNAUTHORIZED';
             return nextResult;
           } else {
+            //
+            // Optional: Show activity in log
+            //
+            if ((nodeEnv === 'development') || (nodeDebugLog)) {
+              const now = new Date();
+              console.log(now.toISOString() + ' Mock Data (Record id=' + createdRecord.id + ')');
+            }
+
             nextResult.data = createdRecord;
             // This is to skip all other .then in the chain
             nextResult.error = 'NO_ERROR';

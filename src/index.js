@@ -27,14 +27,17 @@ const collectDataAndSave = () => {
 };
 
 if (!config.app.disableDataCollectTimer) {
-  console.log('collab-iot-device started with interval ' +
+  const now = new Date();
+  console.log(now.toISOString() + ' collab-iot-device started with interval ' +
     config.app.collectIntervalSeconds.toString() + ' seconds.');
+
   // do first time at program start
   setTimeout(collectDataAndSave, 1000);
   setInterval(collectDataAndSave, config.app.collectIntervalSeconds * 1000);
 } else {
-  console.log('collab-iot-device timer disabled, runing one time.');
-  // timer disabled, call one time in 1 secons
+  const now = new Date();
+  console.log(now.toISOString() + ' collab-iot-device timer disabled, runing one time.');
+  // timer disabled, call one time in 1 seconds
   setTimeout(collectDataAndSave, 1000);
   setTimeout(() => { console.log('Done'); }, 2000);
 }

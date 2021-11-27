@@ -3,7 +3,8 @@
 const fetch = require('node-fetch');
 
 const config = require('../config');
-// const nodeEnv = process.env.NODE_ENV || 'development';
+const nodeEnv = process.env.NODE_ENV || 'development';
+const nodeDebugLog = process.env.NODE_DEBUG_LOG || 0;
 
 let cachedToken = null;
 
@@ -100,6 +101,15 @@ exports.getCachedToken = (previousResult) => {
       // return Promise
       return Promise.resolve(nextResult);
     } else {
+      //
+      // Optional: Show activity in log
+      //
+      if ((nodeEnv === 'development') || (nodeDebugLog)) {
+        const now = new Date();
+        console.log(now.toISOString() + ' Cached token expires in ' +
+          (cachedToken.expires - Math.floor(now.getTime() / 1000)).toString() + ' seconds.');
+      }
+
       nextResult.token = cachedToken;
       // return Promise
       return Promise.resolve(nextResult);
@@ -176,6 +186,16 @@ exports.fetchNewTokenIfNeeded = (previousResult) => {
         })
         .then((tokenResponse) => {
           // console.log(tokenResponse);
+
+          //
+          // Optional: Show activity in log
+          //
+          if ((nodeEnv === 'development') || (nodeDebugLog)) {
+            const now = new Date();
+            console.log(now.toISOString() + ' New token expires in ' +
+              tokenResponse.expires_in.toString() + ' seconds.');
+          }
+
           const nowSeconds = Math.floor((new Date().getTime()) / 1000);
           const token = {
             accessToken: tokenResponse.access_token,

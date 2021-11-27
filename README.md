@@ -56,6 +56,15 @@ OAUTH2_AUTH_URL=http://127.0.0.1:3500
 
 REMOTE_API_URL=http://localhost:4000;
 ```
+
+Not supported in .env file
+
+```
+# When NODE_ENV=production, console activity log disabled.
+NODE_ENV=development
+# When NODE_DEBUG_LOG=1, console activity log enabled when in production
+NODE_DEBUG_LOG=0
+```
 # Detail Description
 
 This demonstration is aimed toward using IOT devices on a home network.
