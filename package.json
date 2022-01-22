@@ -1,6 +1,6 @@
 {
   "name": "collab-iot-device",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mock IOT device used on a collaboration project for learning oauth2orize and passport",
   "main": "src/index.js",
   "scripts": {
@@ -27,6 +27,6 @@
   },
   "dependencies": {
     "dotenv": "^10.0.0",
-    "node-fetch": "^2.6.6"
+    "node-fetch": "^2.6.7"
   }
 }
