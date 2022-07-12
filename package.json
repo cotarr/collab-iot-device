@@ -1,6 +1,6 @@
 {
   "name": "collab-iot-device",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Mock IOT device used on a collaboration project for learning oauth2orize and passport",
   "main": "src/index.js",
   "scripts": {
