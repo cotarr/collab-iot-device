@@ -1,6 +1,6 @@
 {
   "name": "collab-iot-device",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Mock IOT device used on a collaboration project for learning oauth2orize and passport",
   "main": "src/index.js",
   "scripts": {
@@ -19,11 +19,11 @@
   },
   "homepage": "https://github.com/cotarr/collab-iot-device#readme",
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0"
+    "eslint": "^8.31.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1"
   },
   "dependencies": {
     "dotenv": "^16.0.1",
