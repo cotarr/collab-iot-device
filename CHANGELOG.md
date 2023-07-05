@@ -10,10 +10,18 @@ and this project adheres to
 
 BREAKING CHANGE (since v0.0.7) require Node 18 or greater. Incremented major version from 0 to 1
 
+Upgrade to node 18 allows use of internal native NodeJS fetch() API. 
+The node-fetch repository used previously has moved on to provide an ES Module 
+specific release that does not support CommonJS modules.
+Use of the internal node fetch API removes reliance on the legacy node-fetch v2 dependency.
+
 - Set minimum version NodeJs to node 18 or greater, added node version check in config/index.js.
+- Remove npm module node-fetch, now using node internal fetch() API.
 - Rename some module variables to more descriptive names related to chain.
 - Upgrade logic for conditional operations along the promise chain.
 - Overall code clean up and improved comments.
+- In code, now using Object.hasOwn to test if keys properties exist in an object, replacing `in` operator, or boolean check on key name.
+- In various places, create new objects with Object.create(null), replacing object literal
 - Rewrite fetch() network HTTP requests to include supervisory timer and in case of status errors, retrieve error HTTP error content from remote server.
 - Bump dotenv@16.3.1, node-fetch@2.6.12 to clean npm outdated warnings.
 - Re-install eslint, manual install semver@7.5.3, delete and regenerate package-lock.json in v3 format to clear npm audit warning.

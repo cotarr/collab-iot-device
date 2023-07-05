@@ -20,6 +20,8 @@ https://cotarr.github.io/collab-auth
 
 ### Install
 
+Requires NodeJs version 18 or greater
+
 ```bash
 git clone git@github.com:cotarr/collab-iot-device.git
 cd collab-iot-device
