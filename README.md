@@ -42,7 +42,7 @@ npm start
 
 ### Example Environment variables
 
-The `.env` file is supported using dotenv npm package
+The `.env` file is supported using dotenv npm package. A template "example-.env" file is included.
 
 ```
 APP_PID_FILENAME=
@@ -95,7 +95,7 @@ Before an IOT device can use this method, a client record must be created
 in the oauth2 authorization server. The client_id and client_secret are then
 placed in the configuration of the IOT device.
 
-Looking at the netwrok diagram on the home page, it can be 
+Looking at the network diagram on the home page, it can be 
 seen that the database API resource server
 requires a valid access_token to read or write data to the database.
 Therefore, the IOT device must obtain a new oauth2 access_token.
@@ -130,13 +130,13 @@ The Raspberry Pi or other IOT device would then perform the following steps:
 * A cycle timer is created to trigger data acquisition at fixed intervals
 * Timer event triggers the IOT device to collect data from it's sensors
 * The IOT device checks it's token cache to see if has a non-expired access token
- * If necessary, the IOT device requests a new access token which is added to the token cache along with it's expiration time.
+  * If necessary, the IOT device requests a new access token which is added to the token cache along with it's expiration time.
 *  An HTTP POST request is prepared for transmission to the API database server
 *  The access token is attached to the HTTP request Authorization header as a Bearer token.
 *  The POST request is sent to the API.
- * The expected HTTP response status is 201 (Created)
- * 401 Unauthorized response indicates the token is likely expired or otherwise invalid.
- * 403 Forbidden response indicated the client credentials do not have sufficient scope.
+  * The expected HTTP response status is 201 (Created) 
+  * 401 Unauthorized response indicates the token is likely expired or otherwise invalid.
+  * 403 Forbidden response indicated the client credentials do not have sufficient scope.
 
 Typically the API may add additional default values to the record, such as record ID and timestamps.
 The record is returned to the IOT device in the body of the post request as follows.
@@ -153,3 +153,25 @@ The record is returned to the IOT device in the body of the post request as foll
     "createdAt": "2021-09-17T15:33:07.797Z"
   },
 ```
+
+### Try, Fail, Retry Approach
+
+Considering this is a learning exercise, all four servers can be run in a demonstration mode
+where the cookie session database and access token database can be stored in RAM memory.
+Restarting various servers can create a situation where the collab-iot-device has cached
+an unexpired access token. However, the un-expired access token will no longer exist
+in the database of valid token following a restart of the authorization server (collab-auth).
+Therefore the database HTTP request by the collab-iot-device will fail, even though the
+access token has not yet expired, and could continue to fail until the token eventually expires.
+This situation could exist in live production situations if security resets have
+invalidated or revoked unexpired tokens in an authorization server. 
+
+In this learning exercise, the collab-iot-device uses a chain of promises to 
+identify the case of an unexpired access token that will no longer validate.
+
+* Read (emulated) data from IOT device hardware sensors
+* Retrieve cached access token
+* Perform HTTP submission of sensor data using access token
+* Test for Status 401 Unauthorized error occurring with unexpired access token
+  * Conditionally replace cached token with new access token
+  * Conditionally repeat the HTTP data submission a second time using the replacement token.

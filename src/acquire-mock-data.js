@@ -11,7 +11,6 @@ const deviceId = 'iot-device-12';
 
 /**
  * Generate a random number in the range 22.500 to 27.500
- *
  * @returns {Number} Return mock data of type number
  */
 const _generateOneMockData = () => {
@@ -20,9 +19,7 @@ const _generateOneMockData = () => {
 
 /**
  * Mock data acquisition to generate an emulated data collection event
- *
  * Example:
- *
  * {
  *   deviceId: 'iot-device-12',
  *   timestamp: '2021-09-17T15:33:07.743Z',
@@ -30,21 +27,19 @@ const _generateOneMockData = () => {
  *   data2: 25.946,
  *   data3: 24.609
  * }
- *
  * @returns {Promise} resolved with mock data and timestamp
  */
-exports.generateMockDataObject = () => {
+exports.generateMockDataObject = (chain) => {
+  if (chain == null) chain = Object.create(null);
   return new Promise((resolve) => {
     const timeNowInSeconds = new Date().toISOString();
-    const mockData = {
+    chain.data = {
       deviceId: deviceId,
       timestamp: timeNowInSeconds,
       data1: _generateOneMockData(),
       data2: _generateOneMockData(),
       data3: _generateOneMockData()
     };
-    resolve(mockData);
+    resolve(chain);
   });
 };
-
-// console.log(exports.generateMockDataObject);

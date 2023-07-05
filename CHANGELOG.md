@@ -6,8 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.0.8-dev 2023-07-02
+## v1.0.0-dev 2023-07-02
 
+BREAKING CHANGE (since v0.0.7) require Node 18 or greater. Incremented major version from 0 to 1
+
+- Set minimum version NodeJs to node 18 or greater, added node version check in config/index.js.
+- Rename some module variables to more descriptive names related to chain.
+- Upgrade logic for conditional operations along the promise chain.
+- Overall code clean up and improved comments.
+- Rewrite fetch() network HTTP requests to include supervisory timer and in case of status errors, retrieve error HTTP error content from remote server.
 - Bump dotenv@16.3.1, node-fetch@2.6.12 to clean npm outdated warnings.
 - Re-install eslint, manual install semver@7.5.3, delete and regenerate package-lock.json in v3 format to clear npm audit warning.
 
