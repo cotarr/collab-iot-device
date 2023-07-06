@@ -17,6 +17,15 @@ Use of the internal node fetch API removes reliance on the legacy node-fetch v2 
 
 - Set minimum version NodeJs to node 18 or greater, added node version check in config/index.js.
 - Remove npm module node-fetch, now using node internal fetch() API.
+
+Split this into two repositories, one to emulate the IOT device, one to fetch access tokens.
+
+- The src/get-token.js module was removed from this repository to create separate npm module.
+- Created new repository (collab-iot-client-token)[https://github.com/cotarr/collab-iot-client-token]
+- Create new npm repository (@cotarr/collab-iot-client-token )[https://www.npmjs.com/package/@cotarr/collab-iot-client-token]
+
+General code clean up and comments
+
 - Rename some module variables to more descriptive names related to chain.
 - Upgrade logic for conditional operations along the promise chain.
 - Overall code clean up and improved comments.

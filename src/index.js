@@ -8,7 +8,7 @@
 // obtained as needed from the authorization server.
 // ------------------------------------------------------------------------
 
-const { getClientToken, authInit } = require('./get-token');
+const { getClientToken, authInit } = require('@cotarr/collab-iot-client-token');
 const acquire = require('./acquire-mock-data');
 const { pushDataToSqlApi } = require('./push-to-sql');
 

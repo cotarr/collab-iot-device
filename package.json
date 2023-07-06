@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/cotarr/collab-iot-device#readme",
   "dependencies": {
+    "@cotarr/collab-iot-client-token": "^1.0.0",
     "dotenv": "^16.3.1"
   },
   "devDependencies": {
