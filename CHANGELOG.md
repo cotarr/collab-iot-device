@@ -8,7 +8,7 @@ and this project adheres to
 
 ## v1.0.0-dev 2023-07-02
 
-BREAKING CHANGE (since v0.0.7) require Node 18 or greater. Incremented major version from 0 to 1
+BREAKING CHANGE (after v0.0.7) require Node 18 or greater. Incremented major version from 0 to 1
 
 Upgrade to node 18 allows use of internal native NodeJS fetch() API. 
 The node-fetch repository used previously has moved on to provide an ES Module 

@@ -14,6 +14,12 @@ New access_tokens are obtained as needed from the authorization server.
 | [collab-backend-api](https://github.com/cotarr/collab-backend-api) | Mock REST API using tokens to authorize requests      |
 | [collab-iot-device](https://github.com/cotarr/collab-iot-device)   | Mock IOT Device with data acquisition saved to DB     |
 
+The module [collab-iot-client-token](https://github.com/cotarr/collab-iot-client-token)
+was developed specifically to work with this repository (collab-iot-device).
+It is available as an npm package 
+[@cotarr/collab-iot-client-token](https://www.npmjs.com/package/@cotarr/collab-iot-client-token).
+The module will obtain a new Oauth 2.0 access token using client credentials grant.
+
 ### Documentation:
 
 https://cotarr.github.io/collab-auth
@@ -133,9 +139,9 @@ The Raspberry Pi or other IOT device would then perform the following steps:
 * Timer event triggers the IOT device to collect data from it's sensors
 * The IOT device checks it's token cache to see if has a non-expired access token
   * If necessary, the IOT device requests a new access token which is added to the token cache along with it's expiration time.
-*  An HTTP POST request is prepared for transmission to the API database server
-*  The access token is attached to the HTTP request Authorization header as a Bearer token.
-*  The POST request is sent to the API.
+* An HTTP POST request is prepared for transmission to the API database server
+* The access token is attached to the HTTP request Authorization header as a Bearer token.
+* The POST request is sent to the API.
   * The expected HTTP response status is 201 (Created) 
   * 401 Unauthorized response indicates the token is likely expired or otherwise invalid.
   * 403 Forbidden response indicated the client credentials do not have sufficient scope.
@@ -158,22 +164,104 @@ The record is returned to the IOT device in the body of the post request as foll
 
 ### Try, Fail, Retry Approach
 
-Considering this is a learning exercise, all four servers can be run in a demonstration mode
-where the cookie session database and access token database can be stored in RAM memory.
-Restarting various servers can create a situation where the collab-iot-device has cached
-an unexpired access token. However, the un-expired access token will no longer exist
-in the database of valid token following a restart of the authorization server (collab-auth).
-Therefore the database HTTP request by the collab-iot-device will fail, even though the
-access token has not yet expired, and could continue to fail until the token eventually expires.
-This situation could exist in live production situations if security resets have
-invalidated or revoked unexpired tokens in an authorization server. 
+After fetching a new access token, this module will store the token locally
+for future use. The cached token may be used for future requests until 
+either the token expires or the IOT device is restarted.
+For various reasons, it is possible the stored token could 
+become revoked or otherwise invalidated at the authorization server. 
+This could result in an issue where an unexpired token 
+would fail authorization, and continue to fail until the token expires.
 
-In this learning exercise, the collab-iot-device uses a chain of promises to 
-identify the case of an unexpired access token that will no longer validate.
+The collab-iot-device module will use a javascript object that can be used within 
+a chain of Promises such that the object is an argument of each function,
+subsequently, the chain object is returned in resolved promise,
+in turn to become the next argument. One chain object can keep all 
+the state involved in multiple network requests local within 
+the chain of promise functions. The sequence would run as follows:
 
-* Read (emulated) data from IOT device hardware sensors
-* Retrieve cached access token
-* Perform HTTP submission of sensor data using access token
-* Test for Status 401 Unauthorized error occurring with unexpired access token
-  * Conditionally replace cached token with new access token
-  * Conditionally repeat the HTTP data submission a second time using the replacement token.
+1. An initial call to the `acquire.generateMockDataObject()` begins the process by generating data to emulate the hardware device sensors. The argument of the function `Object.create(null)` is used to create the empty chain object that will pass down the promise chain. The newly acquired data is added to the chain object as the data property.
+
+```
+chain {
+  data: {
+    deviceId: 'iot-device-12',
+    timestamp: '2021-09-17T15:33:07.743Z',
+    data1: 25.486,
+    data2: 25.946,
+    data3: 24.609
+  }
+}
+```
+
+2. The function `getClientToken(chain)` is called with the chain object as an argument. In this case a cached token is retrieved from the cache and added to the chain object.
+
+```
+chain {
+  data: { ... },
+  token: {
+    accessToken: 'xxxxxx.xxxxxx.xxxxx',
+    expires: 1631808644,
+    cached: true
+  }
+}
+```
+
+3. A REST API submission function `pushDataToSqlApi(chain)` is called with the chain object as an argument to perform the HTTP submission request using the cached token. The HTTP request fails with 401 Unauthorized. Since the token is cached and failed with 401, it is eligible for a retry. The forceNewToken options property is added to the chain object and set to true. The promise resolves to the chain object.
+
+```
+chain {
+  data: { ... },
+  token: { ... },
+  options {
+    forceNewToken: true;
+  }
+}
+```
+
+4. The `getClientToken(chain)` is called a second time with the chain object as an argument. The getClientToken detects the forceNewToken flag, ignores the previously cached token. A new access token fetched from the authorization server. 
+
+```
+chain {
+  data: { ... },
+  options: { ... },
+  token: {
+    accessToken: 'xxxxxx.xxxxxx.xxxxx',
+    expires: 1631808644,
+    cached: false
+  }
+}
+
+```
+5. The REST API submission function `getClientToken(chain)`is called a second time to retry the submission. This time it succeeds and the promise chain ends.
+
+Alternately, in the case were the first access token was valid, the first 
+REST API submission request succeeds, flags can be set to ignore future requests.
+Setting `ignoreTokenRequest=true` will instruct the second 
+getClientToken() function to ignore the second token request.
+Setting `ignoreSqlPush=true` will instruct the second 
+pushDataToSqlApi() function to ignore the second data submission.
+As the promise chain executes through the second retry steps, 
+no further actions are taken.
+
+```
+chain {
+  data: { ... },
+  token: { ... },
+  options {
+    ignoreTokenRequest: true,
+    ignoreSqlPush: true
+  }
+}
+```
+
+The full promise chain will look like this:
+
+```js
+// Pass and empty object as argument of initial function, to be the chain object.
+acquire.generateMockDataObject(Object.create(null)) // Read sensor, attach data to chain 
+  .then((chain) => getClientToken(chain))           // Get cached token, attach to chain object
+  .then((chain) => pushDataToSqlApi(chain))         // Submit REST API request using token
+  .then((chain) => getClientToken(chain))           // If needed, get another replacement token
+  .then((chain) => pushDataToSqlApi(chain))         // If needed, repeat REST API submission
+  .catch((err) => console.log(err);
+```

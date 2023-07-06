@@ -61,8 +61,9 @@ const collectDataAndSave = () => {
     // Second try (skipped internally if not needed)
     .then((chain) => getClientToken(chain))
     .then((chain) => pushDataToSqlApi(chain))
+    // show result with console.log (when NODE_ENV===development)
     .then((chain) => debugShowChain(chain))
-    .catch((err) => console.log(err.message || err.toString || 'Error'));
+    .catch((err) => console.log(err.message || err.toString() || 'Error'));
 };
 
 //
