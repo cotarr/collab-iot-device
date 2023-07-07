@@ -41,7 +41,7 @@ authInit({
 // eslint-disable-next-line no-unused-vars
 const debugShowChain = (chain) => {
   // console.log(JSON.stringify(chain, null, 2));
-  if ((nodeEnv === 'development') || (process.env.SHOW_DEBUG_LOG === 1)) {
+  if ((nodeEnv === 'development') || (process.env.NODE_DEBUG_LOG === '1')) {
     const nowSeconds = Math.floor((new Date().getTime()) / 1000);
     const expiresInSeconds = chain.token.expires - nowSeconds;
     console.log('token expires in ' + expiresInSeconds.toString() +
