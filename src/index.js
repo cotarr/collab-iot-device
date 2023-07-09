@@ -44,8 +44,10 @@ const debugShowChain = (chain) => {
   if ((nodeEnv === 'development') || (process.env.NODE_DEBUG_LOG === '1')) {
     const nowSeconds = Math.floor((new Date().getTime()) / 1000);
     const expiresInSeconds = chain.token.expires - nowSeconds;
-    console.log('token expires in ' + expiresInSeconds.toString() +
-    ' seconds, (cached=' + chain.token.cached + ')');
+    const newOrCached = (chain.token.cached) ? 'cached' : 'new';
+    const now = new Date();
+    console.log(now.toISOString() + ' Submitted mock data, id=' + chain.createdRecord.id +
+    ', using ' + newOrCached + ' token expiring in ' + expiresInSeconds.toString() + ' seconds');
   }
   return Promise.resolve(chain);
 };

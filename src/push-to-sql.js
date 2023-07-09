@@ -120,7 +120,8 @@ exports.pushDataToSqlApi = (chain) => {
             chain.options.ignoreTokenRequest = true;
             chain.options.ignoreSQLPush = true;
             delete chain.options.forceNewToken;
-            // No data is attached to the chain, original data already there.
+            // Attached the new record to the chain in case the id is needed elsewhere.
+            chain.createdRecord = createdRecord;
             resolve(chain);
           })
           .catch((err) => {

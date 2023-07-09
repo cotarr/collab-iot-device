@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.2](https://github.com/cotarr/collab-iot-device/releases/tag/v1.0.2) - 2023-07-08
+
+This is a minor message format change to align with the collab-auth /docs/ description.
+
+- In src/push-to-sql added response from POST request to the chain object to make record id available.
+- Updated debug console log message to show the id value of created record, token as new or cached, and time until token expires.
+
 ## [v1.0.1](https://github.com/cotarr/collab-iot-device/releases/tag/v1.0.1) - 2023-07-07
 
 ### Fixed
