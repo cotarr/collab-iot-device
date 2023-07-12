@@ -53,7 +53,7 @@ exports.pushDataToSqlApi = (chain) => {
     // In the case of missing access token, return the chain without changes
     // This will not throw an error.
     if ((chain == null) ||
-      (!Object.hasOwn(chain, 'token')) ||
+      (!Object.hasOwn(chain, 'token')) || (chain.token == null) ||
       (!Object.hasOwn(chain.token, 'accessToken')) ||
       (chain.token.accessToken.length === 0)) {
       delete chain.token;
@@ -91,9 +91,6 @@ exports.pushDataToSqlApi = (chain) => {
                   err.status = response.status;
                   err.statusText = response.statusText;
                   err.remoteErrorText = remoteErrorText;
-                  if (response.headers.get('WWW-Authenticate')) {
-                    err.oauthHeaderText = response.headers.get('WWW-Authenticate');
-                  }
                   throw err;
                 });
             }

@@ -1,8 +1,11 @@
 {
   "name": "collab-iot-device",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Mock IOT device used on a collaboration project for learning oauth2orize and passport",
   "main": "src/index.js",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "lint": "npx eslint src config",
     "test": "echo \"Error: no test specified\" && exit 1",

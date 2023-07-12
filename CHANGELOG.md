@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.3](https://github.com/cotarr/collab-iot-device/releases/tag/v1.0.3) - 2023-07-12
+
+- Add check for (cache.token == null)
+- Add to package.json engine.node>=18. This is to match dependency requirement collab-iot-client-token.
+- Remove parsing WWW-Authenticate header, this was a copy paste error. It is only relevant on fetch requests direct the authorization server.
+
 ## [v1.0.2](https://github.com/cotarr/collab-iot-device/releases/tag/v1.0.2) - 2023-07-08
 
 This is a minor message format change to align with the collab-auth /docs/ description.
