@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## next
+
+- Removed npm package eslint.
+- Deleted the .eslintrc.js configuration file for eslint.
+- Remove lint command from package.json
+- Delete and regenerate package-lock.json
+
+The intent behind removing eslint is to eliminate future GitHub notifications for outdated development dependencies.
+
+- Update npm dependencies: dotenv@16.4.5 @cotarr/collab-iot-client-token@1.0.1
+
+- There were no code changes in this commit.
+
 ## [v1.0.3](https://github.com/cotarr/collab-iot-device/releases/tag/v1.0.3) - 2023-07-12
 
 - Add check for (cache.token == null)
